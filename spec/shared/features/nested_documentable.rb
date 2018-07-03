@@ -51,12 +51,12 @@ shared_examples "nested documentable" do |login_as_name, documentable_factory_na
     scenario "Should show max documents warning when max documents allowed limit is reached", :js do
       login_as user_to_login
       visit send(path, arguments)
-
       documentable.class.max_documents_allowed.times.each do
-        click_link "Add new document"
+        documentable_attach_new_file(Rails.root.join('spec/fixtures/files/empty.pdf'))
       end
 
       expect(page).to have_css ".max-documents-notice", visible: true
+      expect(page).to have_content 'Remove document'
     end
 
     scenario "Should hide max documents warning after any document removal", :js do
@@ -67,7 +67,7 @@ shared_examples "nested documentable" do |login_as_name, documentable_factory_na
         click_link "Add new document"
       end
 
-      all("a", text: "Remove document").last.click
+      all("a", text: "Cancel").last.click
 
       expect(page).to have_css ".max-documents-notice", visible: false
     end
@@ -283,6 +283,23 @@ shared_examples "nested documentable" do |login_as_name, documentable_factory_na
         expect(page).not_to have_css ".document"
       end
 
+    end
+
+    describe "When allow attached documents setting is disabled" do
+      before do
+        Setting['feature.allow_attached_documents'] = false
+      end
+
+      after do
+        Setting['feature.allow_attached_documents'] = true
+      end
+
+      scenario "Add new document button should not be available" do
+        login_as user_to_login
+        visit send(path, arguments)
+
+        expect(page).not_to have_content("Add new document")
+      end
     end
 
   end

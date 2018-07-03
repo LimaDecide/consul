@@ -17,7 +17,7 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
   def index
     @heading_filters = heading_filters
     @investments = if current_user.valuator? && @budget.present?
-                     @budget.investments.scoped_filter(params_for_current_valuator, @current_filter)
+                     @budget.investments.visible_to_valuators.scoped_filter(params_for_current_valuator, @current_filter)
                             .order(cached_votes_up: :desc)
                             .page(params[:page])
                    else
@@ -74,18 +74,26 @@ class Valuation::BudgetInvestmentsController < Valuation::BaseController
 
     def heading_filters
       investments = @budget.investments.by_valuator(current_user.valuator.try(:id))
-                           .valuation_open.select(:heading_id).all.to_a
+                                       .visible_to_valuators.distinct
 
-      [ { name: t('valuation.budget_investments.index.headings_filter_all'),
-          id: nil,
-          pending_count: investments.size
-        }
-      ] + Budget::Heading.where(id: investments.map(&:heading_id).uniq).order(name: :asc).collect do |h|
-        { name: h.name,
-          id: h.id,
-          pending_count: investments.count{|x| x.heading_id == h.id}
-        }
-      end
+      investment_headings = Budget::Heading.where(id: investments.pluck(:heading_id).uniq)
+                                           .order(name: :asc)
+
+      all_headings_filter = [
+                              {
+                                name: t('valuation.budget_investments.index.headings_filter_all'),
+                                id: nil,
+                                count: investments.size
+                              }
+                            ]
+
+      filters = investment_headings.inject(all_headings_filter) do |filters, heading|
+                  filters << {
+                               name: heading.name,
+                               id: heading.id,
+                               count: investments.select{|i| i.heading_id == heading.id}.size
+                             }
+                end
     end
 
     def params_for_current_valuator

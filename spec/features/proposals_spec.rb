@@ -48,6 +48,35 @@ feature 'Proposals' do
       end
     end
 
+    scenario 'Index view mode' do
+      featured_proposals = create_featured_proposals
+      proposals = [create(:proposal), create(:proposal), create(:proposal)]
+
+      visit proposals_path
+
+      click_button 'View mode'
+
+      click_link 'List'
+
+      proposals.each do |proposal|
+        within('#proposals') do
+          expect(page).to     have_link proposal.title
+          expect(page).to_not have_content proposal.summary
+        end
+      end
+
+      click_button 'View mode'
+
+      click_link 'Cards'
+
+      proposals.each do |proposal|
+        within('#proposals') do
+          expect(page).to have_link proposal.title
+          expect(page).to have_content proposal.summary
+        end
+      end
+    end
+
     scenario 'Pagination' do
       per_page = Kaminari.config.default_per_page
       (per_page + 5).times { create(:proposal) }
@@ -659,7 +688,7 @@ feature 'Proposals' do
 
       visit proposals_path
       click_link 'highest rated'
-      expect(page).to have_selector('a.active', text: 'highest rated')
+      expect(page).to have_selector('a.is-active', text: 'highest rated')
 
       within '#proposals' do
         expect(best_proposal.title).to appear_before(medium_proposal.title)
@@ -679,7 +708,7 @@ feature 'Proposals' do
 
       visit proposals_path
       click_link 'newest'
-      expect(page).to have_selector('a.active', text: 'newest')
+      expect(page).to have_selector('a.is-active', text: 'newest')
 
       within '#proposals' do
         expect(best_proposal.title).to appear_before(medium_proposal.title)
@@ -742,7 +771,7 @@ feature 'Proposals' do
 
         click_link 'recommendations'
 
-        expect(page).to have_selector('a.active', text: 'recommendations')
+        expect(page).to have_selector('a.is-active', text: 'recommendations')
 
         within '#proposals-list' do
           expect(best_proposal.title).to appear_before(medium_proposal.title)
@@ -1259,7 +1288,7 @@ feature 'Proposals' do
       fill_in "search", with: "Show what you got"
       click_button "Search"
 
-      expect(page).to have_selector("a.active", text: "relevance")
+      expect(page).to have_selector("a.is-active", text: "relevance")
 
       within("#proposals") do
         expect(all(".proposal")[0].text).to match "Show what you got"
@@ -1278,7 +1307,7 @@ feature 'Proposals' do
       fill_in "search", with: "Show what you got"
       click_button "Search"
       click_link 'newest'
-      expect(page).to have_selector("a.active", text: "newest")
+      expect(page).to have_selector("a.is-active", text: "newest")
 
       within("#proposals") do
         expect(all(".proposal")[0].text).to match "Show you got"
@@ -1303,7 +1332,7 @@ feature 'Proposals' do
       fill_in "search", with: "Show you got"
       click_button "Search"
       click_link 'recommendations'
-      expect(page).to have_selector("a.active", text: "recommendations")
+      expect(page).to have_selector("a.is-active", text: "recommendations")
 
       within("#proposals") do
         expect(all(".proposal")[0].text).to match "Show you got"

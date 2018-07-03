@@ -6,6 +6,7 @@ gem 'acts-as-taggable-on', '~> 5.0.0'
 gem 'acts_as_votable', '~> 0.11.1'
 gem 'ahoy_matey', '~> 1.6.0'
 gem 'ancestry', '~> 3.0.1'
+gem 'autoprefixer-rails', '~> 8.2.0'
 gem 'browser', '~> 2.5.2'
 gem 'cancancan', '~> 2.1.2'
 gem 'ckeditor', '~> 4.2.3'
@@ -17,7 +18,7 @@ gem 'delayed_job_active_record', '~> 4.1.0'
 gem 'devise', '~> 3.5.7'
 gem 'devise-async', '~> 0.10.2'
 gem 'devise_security_extension', '~> 0.10.0'
-gem 'foundation-rails', '~> 6.2.4.0'
+gem 'foundation-rails', '~> 6.4.3.0'
 gem 'foundation_rails_helper', '~> 2.0.0'
 gem 'graphiql-rails', '~> 1.4.1'
 gem 'graphql', '~> 1.7.8'
@@ -51,6 +52,8 @@ gem 'turnout', '~> 2.4.0'
 gem 'uglifier', '~> 4.1.2'
 gem 'unicorn', '~> 5.4.0'
 gem 'whenever', '~> 0.10.0', require: false
+gem 'globalize', '~> 5.0.0'
+gem 'globalize-accessors', '~> 0.2.1'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-leaflet'
@@ -86,8 +89,8 @@ group :development do
   gem 'capistrano-rails', '~> 1.3.1', require: false
   gem 'capistrano3-delayed-job', '~> 1.7.3'
   gem 'mdl', '~> 0.4.0', require: false
-  gem 'rubocop', '~> 0.52.1', require: false
-  gem 'rubocop-rspec', '~> 1.22.1', require: false
+  gem 'rubocop', '~> 0.54.0', require: false
+  gem 'rubocop-rspec', '~> 1.24.0', require: false
   gem 'rvm1-capistrano3', '~> 1.4.0', require: false
   gem 'scss_lint', '~> 0.54.0', require: false
   gem 'web-console', '~> 3.3.0'

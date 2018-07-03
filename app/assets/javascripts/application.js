@@ -33,6 +33,7 @@
 //= require moderator_comment
 //= require moderator_debates
 //= require moderator_proposals
+//= require moderator_proposal_notifications
 //= require prevent_double_submission
 //= require gettext
 //= require annotator
@@ -76,6 +77,8 @@
 //= require table_sortable
 //= require investment_report_alert
 //= require send_newsletter_alert
+//= require managers
+//= require globalize
 
 var initialize_modules = function() {
   App.Comments.initialize();
@@ -119,6 +122,8 @@ var initialize_modules = function() {
   App.TableSortable.initialize();
   App.InvestmentReportAlert.initialize();
   App.SendNewsletterAlert.initialize();
+  App.Managers.initialize();
+  App.Globalize.initialize();
 };
 
 $(function(){
